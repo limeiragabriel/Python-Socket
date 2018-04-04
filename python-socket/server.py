@@ -15,17 +15,21 @@ saidas = [1, -1, -1, 1]
 rede = Perceptron(amostras=amostras, saidas=saidas,taxa_aprendizado=0.1, epocas=1000)
 rede.treinar()
 
-def process_input(input_string):
+def process_input(input_string,rede_):
     print(PROCESSING)
     try:
         teste = [float(x) for x in input_string.split("#")]
         if teste == []: return NO_CONTENT
-        result = rede.testar(teste, 'A', 'B')
+        result = rede_.testar(teste, 'A', 'B')
         return OK + " - " + result
     except:
         return BAD_REQUEST
 
 def client_thread(conn, ip, port, MAX_BUFFER_SIZE = 4096):
+
+    rede_n = rede
+    #rede_n = Perceptron(amostras=amostras, saidas=saidas,taxa_aprendizado=0.1, epocas=1000)
+    #rede_n.treinar()
 
     while True:
         input_bytes = conn.recv(MAX_BUFFER_SIZE)
@@ -40,7 +44,7 @@ def client_thread(conn, ip, port, MAX_BUFFER_SIZE = 4096):
         if input_client == "":
             break
             
-        res = process_input(input_client)
+        res = process_input(input_client,rede_n)
         print("{} is: {}".format(input_client, res))
 
         result = res.encode("utf8")

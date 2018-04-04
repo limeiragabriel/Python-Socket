@@ -1,5 +1,5 @@
 import random
-import messages
+from messages import *
 
 class Perceptron:
 
